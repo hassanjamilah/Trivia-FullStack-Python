@@ -42,7 +42,7 @@ def create_app(test_config=None):
 
 
   '''
-  @TODO: 
+  @TOTO: 
   Create an endpoint to handle GET requests for questions, 
   including pagination (every 10 questions). 
   This endpoint should return a list of questions, 
@@ -55,7 +55,8 @@ def create_app(test_config=None):
   '''
   @app.route('/questions',methods=['GET'])
   def get_questions():
-      page = request.args.get('page',1)
+      page = int(request.args.get('page','1'))
+      
       start = (page-1)*QUESTIONS_PER_PAGE
       end = start + QUESTIONS_PER_PAGE
       category = request.args.get('category',None)
