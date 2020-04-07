@@ -88,43 +88,79 @@ def create_app(test_config=None):
   
 
   '''
-  @TODO: 
+  @TOTO: 
   Create an endpoint to DELETE question using a question ID. 
 
-  TEST: When you click the trash icon next to a question, the question will be removed.
+  TEST ✅: When you click the trash icon next to a question, the question will be removed.
   This removal will persist in the database and when you refresh the page. 
   '''
-
+  @app.route('/questions/<int:question_id>' , methods=['DELETE'])
+  def delete_question(question_id):
+        question = Question.query.get(question_id)
+        question.delete()
+        return jsonify({"success":True})
   '''
-  @TODO: 
+  @TOTO:✅ 
   Create an endpoint to POST a new question, 
   which will require the question and answer text, 
   category, and difficulty score.
 
-  TEST: When you submit a question on the "Add" tab, 
+  TEST 👍🏻: When you submit a question on the "Add" tab, 
   the form will clear and the question will appear at the end of the last page
   of the questions list in the "List" tab.  
   '''
-
+  
   '''
-  @TODO: 
+  @TODO✅: 
   Create a POST endpoint to get questions based on a search term. 
   It should return any questions for whom the search term 
   is a substring of the question. 
 
-  TEST: Search by any phrase. The questions list will update to include 
+  TEST👍🏻: Search by any phrase. The questions list will update to include 
   only question that include that string within their question. 
   Try using the word "title" to start. 
   '''
+  @app.route('/questions',methods=['POST'])
+  def add_new_question():
+        body = request.get_json()
+        search = body.get('search' , None)
+        if search == None:  
+            ques = body.get('question')
+            answer = body.get('answer')
+            category = body.get('category')
+            difficulty = body.get('difficulty')
+            question = Question(ques , answer , category , difficulty)
+            question.insert()
+            return jsonify({
+                  "success":True
+            })
+        else : 
+            allQuestions = Question.search(search)
+            return jsonify({
+                  'success':True , 
+                  'total_questions':len(allQuestions) , 
+                  'questions':allQuestions,
+                 
+            })  
+  
+
 
   '''
-  @TODO: 
+  @TODO✅: 
   Create a GET endpoint to get questions based on category. 
 
-  TEST: In the "List" tab / main screen, clicking on one of the 
+  TEST👍🏻: In the "List" tab / main screen, clicking on one of the 
   categories in the left column will cause only questions of that 
   category to be shown. 
   '''
+  @app.route('/questions/<category_name>')
+  def get_questions_by_category(category_name):
+        allQuestions = Question.searchByCaegories(category_name)
+        return jsonify({
+              "success":True , 
+              "questions":allQuestions , 
+              'total_questions':len(allQuestions) 
+        })
 
 
   '''
