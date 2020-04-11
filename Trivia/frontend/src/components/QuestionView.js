@@ -31,7 +31,7 @@ class QuestionView extends Component {
           totalQuestions: result.total_questions,
           categories: result.categories,
           currentCategory: result.current_category })
-          alert(result.total_questions)
+          
         return;
       },
       error: (error) => {
