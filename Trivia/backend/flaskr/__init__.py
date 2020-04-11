@@ -34,10 +34,13 @@ def create_app(test_config=None):
   '''
   @app.route('/categories',methods=['GET'])
   def get_all_categories():
-       allCats = Category.query.all()
-       formattedCats = [cat.format() for cat in allCats]
+       allCats = {} 
+       for cat in Category.query.all():
+             allCats[cat.id] = cat.type
+       
+       
        return jsonify({
-             'categories':formattedCats
+             'categories':allCats
        })
 
 
@@ -60,9 +63,11 @@ def create_app(test_config=None):
       start = (page-1)*QUESTIONS_PER_PAGE
       end = start + QUESTIONS_PER_PAGE
       category = request.args.get('category',None)
+      allCats = {} 
+      for cat in Category.query.all():
+            allCats[cat.id] = cat.type
       
-      allCats = Category.query.all()
-      formattedCats = [cat.format() for cat in allCats]
+      #formattedCats = [cat.format() for cat in allCats]
       if category == None:
             allQuestions = Question.query.all()
             allQuestions_formatted = [question.format() for question in allQuestions]
@@ -71,7 +76,7 @@ def create_app(test_config=None):
                   'total_questions':len(allQuestions) , 
                   'questions':allQuestions_formatted[start:end],
                   'current_category':'None' , 
-                  'categories':formattedCats
+                  'categories':allCats
                   
             })
       else:
@@ -111,7 +116,7 @@ def create_app(test_config=None):
   '''
   
   '''
-  @TODO✅: 
+  @TOTO✅: 
   Create a POST endpoint to get questions based on a search term. 
   It should return any questions for whom the search term 
   is a substring of the question. 
@@ -123,7 +128,7 @@ def create_app(test_config=None):
   @app.route('/questions',methods=['POST'])
   def add_new_question():
         body = request.get_json()
-        search = body.get('search' , None)
+        search = body.get('searchTerm' , None)
         if search == None:  
             ques = body.get('question')
             answer = body.get('answer')
@@ -146,7 +151,7 @@ def create_app(test_config=None):
 
 
   '''
-  @TODO✅: 
+  @TOTO✅: 
   Create a GET endpoint to get questions based on category. 
 
   TEST👍🏻: In the "List" tab / main screen, clicking on one of the 
@@ -162,9 +167,18 @@ def create_app(test_config=None):
               'total_questions':len(allQuestions) 
         })
 
+  @app.route('/categories/<int:cat_id>/questions')
+  def get_questions_by_cat_id(cat_id):
+        category = Category.query.get(cat_id)
+        allQuestions = Question.searchByCaegories(category.type)
+        return jsonify({
+              "success":True , 
+              "questions":allQuestions , 
+              'total_questions':len(allQuestions) 
+        })
 
   '''
-  @TODO: 
+  @TOTO: 
   Create a POST endpoint to get questions to play the quiz. 
   This endpoint should take category and previous question parameters 
   and return a random questions within the given category, 
@@ -174,17 +188,17 @@ def create_app(test_config=None):
   one question at a time is displayed, the user is allowed to answer
   and shown whether they were correct or not. 
   '''
-  @app.route('/questions/random_questions', methods=['POST'])
+  @app.route('/quizzes', methods=['POST'])
   def get_random_question():
         
         body = request.get_json()
-        category = body.get('category' , None)
+        category = body.get('quizCategory' , None)
         allQuestions = Question.GetRandomQuestion(category)
         return jsonify({
               "success":True , 
               "total_questions": len(allQuestions), 
-              "questions":allQuestions
-              
+              "question":allQuestions
+            
         })
 
 
