@@ -107,6 +107,8 @@ def create_app(test_config=None):
   @app.route('/questions/<int:question_id>' , methods=['DELETE'])
   def delete_question(question_id):
         question = Question.query.get(question_id)
+        if question == None:
+              abort(404)
         question.delete()
         return jsonify({"success":True})
   '''
@@ -207,10 +209,12 @@ def create_app(test_config=None):
         
         body = request.get_json()
         category = body.get('quizCategory' , None)
-        allQuestions = Question.GetRandomQuestion(category)
+        prevQuestions = body.get('previous_questions')
+        print('🎁🎁🎁🎁🎁{}'.format(len(prevQuestions)))
+        allQuestions = Question.GetRandomQuestion(category , prevQuestions)
         return jsonify({
               "success":True , 
-              "total_questions": len(allQuestions), 
+              
               "question":allQuestions
             
         })

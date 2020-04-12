@@ -32,14 +32,14 @@ class Question(db.Model):
   answer = Column(String)
   category = Column(String)
   difficulty = Column(Integer)
-  appeared = Column(Boolean)
+  
 
   def __init__(self, question, answer, category, difficulty):
     self.question = question
     self.answer = answer
     self.category = category
     self.difficulty = difficulty
-    self.appeared = False
+    
 
   def insert(self):
     db.session.add(self)
@@ -52,43 +52,23 @@ class Question(db.Model):
     db.session.delete(self)
     db.session.commit()
 
-  def GetRandomQuestion(categoryName):
-        questions = [Question('' , '' , '' , 0)] 
-        if categoryName == '':
-              categoryName = None ; 
-        if categoryName != None  : 
-          questions = Question.query.filter(Question.category==categoryName).filter(Question.appeared==False).all()
-        else :
-          questions = Question.query.filter(Question.appeared==False).all()    
-        '''
-        If the length of the search of the not appeared question is 0 
-        then set all the quesions again to be not appeared
-        '''
-        if len(questions) == 0 :
-              if categoryName != None: 
-                questions = questions = Question.query.filter(Question.category==categoryName).filter(Question.appeared==True).all()
-              else:
-                questions = Question.query.filter(Question.appeared==True).all()    
-                    
-              for ques in questions:
-                    ques.setAppeared(False)
-                    if categoryName != None:    
-                      questions = Question.query.filter(Question.category==categoryName).all()
-                    else:
-                        questions = Question.query.all()   
-        num = random.randrange(0, len(questions) , 1)
-        question = questions[num]
-        question.setAppeared(True)
-        print('🍎🍎🍎🍎🍎{}'.format(question.format()))
-        return question.format()
-                
-                
-                    
-  def setAppeared(self , didAppeared): 
-        print ('🧡🧡🧡🧡🧡🧡{}'.format(didAppeared))
-        question = Question.query.get(self.id)
-        question.appeared = didAppeared
-        db.session.commit()
+
+  def GetRandomQuestion(category , prevQuestions):
+        allQuestions = [] 
+        allQuestions1 = []
+        if category == None:
+              allQuestions = db.session.query(Question.id).all()
+        else:
+              allQuestions = db.session.query(Question.id).filter(Question.category == category).all()
+        print (prevQuestions)
+        for question in allQuestions:
+            if  not question[0] in prevQuestions:
+                 allQuestions1.append(question)
+        num = random.randrange(0, len(allQuestions1) , 1) 
+        questId = allQuestions1[num]
+        question = Question.query.get(questId)
+        return question.format()        
+
   def search( search_term):
         questions = Question.query.filter(Question.question.ilike("%{}%".format(search_term)) ).all()
         formatted_questions = [question.format() for question in questions]
@@ -103,7 +83,7 @@ class Question(db.Model):
       'id': self.id,
       'question': self.question,
       'answer': self.answer,
-      'category': self.category,
+      'category': self.category , 
       'difficulty': self.difficulty
     }
 
