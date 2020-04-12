@@ -63,7 +63,7 @@ Error Handling
 Errors are returned as JSON objects in the following format:
 
 {
-    "success": False, 
+    "success": False,
     "error": 400,
     "message": "bad request"
 }
@@ -76,8 +76,8 @@ The API will return three error types when requests fail:
 Endpoints
 Get /questions
         General:
-            Returns a list of questions depending on the category specified and the page number 
-        Sample: 
+            Returns a list of questions depending on the category specified and the page number
+        Sample:
             curl http://127.0.0.1:5000/questions?category=Art&page=1
         Response:
             {
@@ -129,164 +129,120 @@ Get /questions
             ],
             "success": true,
             "total_questions": 5
-            }            
+            }
+
 Post /questions
+        General:
+            Add a new Question
+        Request Body:
+            type: application/json
+            body sample :
+                {
+                    "answer": "answer14",
+                    "category": "Art",
+                    "difficulty": 3,
+                    "question": "Questions14"
+                }
+        Response:
+                {
+                "success": true
+                }
 
 Post /questions   (Search)
-
+        General:
+            Search for questions depending on the search query in the request body
+        Request Body:
+            type: application/json
+            body sample:
+            {"searchTerm":"a"}
+        Response:
+            {
+            "questions": [
+                {
+                "answer": "Maya2",
+                "category": "Art",
+                "difficulty": 3,
+                "id": 23,
+                "question": "hassan1"
+                },
+                {
+                "answer": "Mariam",
+                "category": "1",
+                "difficulty": 4,
+                "id": 24,
+                "question": "Hamzah"
+                }
+            ],
+            "success": true,
+            "total_questions": 2
+            }
 
 Delete /questions/<question_id>
+        General:
+            Delete the specified question
+        Sample:
+            curl -X DELETE http://127.0.0.1:5000/questions/1
+        Response:
+                {
+                "success": true
+                }
 
 
 
 Get /categories
+        General:
+            Getting all the categoris
+        Sample:
+            curl http://127.0.0.1:5000/categories
+        Response:
+            {
+            "categories": {
+                "1": "Science",
+                "2": "Art",
+                "3": "Geography",
+                "4": "History",
+                "5": "Entertainment",
+                "6": "Sports"
+            }
+}
 
 Get /categories/<int:cat_id>/questions
-
-GET /books
-
-    General:
-        Returns a list of book objects, success value, and total number of books
-        Results are paginated in groups of 8. Include a request argument to choose page number, starting from 1.
-    Sample: curl http://127.0.0.1:5000/books
-
-  "books": [
-    {
-      "author": "Stephen King",
-      "id": 1,
-      "rating": 5,
-      "title": "The Outsider: A Novel"
-    },
-    {
-      "author": "Lisa Halliday",
-      "id": 2,
-      "rating": 5,
-      "title": "Asymmetry: A Novel"
-    },
-    {
-      "author": "Kristin Hannah",
-      "id": 3,
-      "rating": 5,
-      "title": "The Great Alone"
-    },
-    {
-      "author": "Tara Westover",
-      "id": 4,
-      "rating": 5,
-      "title": "Educated: A Memoir"
-    },
-    {
-      "author": "Jojo Moyes",
-      "id": 5,
-      "rating": 5,
-      "title": "Still Me: A Novel"
-    },
-    {
-      "author": "Leila Slimani",
-      "id": 6,
-      "rating": 5,
-      "title": "Lullaby"
-    },
-    {
-      "author": "Amitava Kumar",
-      "id": 7,
-      "rating": 5,
-      "title": "Immigrant, Montana"
-    },
-    {
-      "author": "Madeline Miller",
-      "id": 8,
-      "rating": 5,
-      "title": "CIRCE"
-    }
-  ],
-"success": true,
-"total_books": 18
-}
-
-POST /books
-
-    General:
-        Creates a new book using the submitted title, author and rating. Returns the id of the created book, success value, total books, and book list based on current page number to update the frontend.
-    curl http://127.0.0.1:5000/books?page=3 -X POST -H "Content-Type: application/json" -d '{"title":"Neverwhere", "author":"Neil Gaiman", "rating":"5"}'
-
-{
-  "books": [
-    {
-      "author": "Neil Gaiman",
-      "id": 24,
-      "rating": 5,
-      "title": "Neverwhere"
-    }
-  ],
-  "created": 24,
-  "success": true,
-  "total_books": 17
-}
-
-DELETE /books/{book_id}
-
-    General:
-        Deletes the book of the given ID if it exists. Returns the id of the deleted book, success value, total books, and book list based on current page number to update the frontend.
-    curl -X DELETE http://127.0.0.1:5000/books/16?page=2
-
-{
-  "books": [
-    {
-      "author": "Gina Apostol",
-      "id": 9,
-      "rating": 5,
-      "title": "Insurrecto: A Novel"
-    },
-    {
-      "author": "Tayari Jones",
-      "id": 10,
-      "rating": 5,
-      "title": "An American Marriage"
-    },
-    {
-      "author": "Jordan B. Peterson",
-      "id": 11,
-      "rating": 5,
-      "title": "12 Rules for Life: An Antidote to Chaos"
-    },
-    {
-      "author": "Kiese Laymon",
-      "id": 12,
-      "rating": 1,
-      "title": "Heavy: An American Memoir"
-    },
-    {
-      "author": "Emily Giffin",
-      "id": 13,
-      "rating": 4,
-      "title": "All We Ever Wanted"
-    },
-    {
-      "author": "Jose Andres",
-      "id": 14,
-      "rating": 4,
-      "title": "We Fed an Island"
-    },
-    {
-      "author": "Rachel Kushner",
-      "id": 15,
-      "rating": 1,
-      "title": "The Mars Room"
-    }
-  ],
-  "deleted": 16,
-  "success": true,
-  "total_books": 15
-}
-
-PATCH /books/{book_id}
-
-    General:
-        If provided, updates the rating of the specified book. Returns the success value and id of the modified book.
-    curl http://127.0.0.1:5000/books/15 -X PATCH -H "Content-Type: application/json" -d '{"rating":"1"}'
-
-{
-  "id": 15,
-  "success": true
-}
+        General:
+            Get questions for specified category
+        Sample:
+            curl http://127.0.0.1:5000/categories/1/questions
+        Response:
+            {
+            "questions": [
+                {
+                "answer": "answer9",
+                "category": "Science",
+                "difficulty": 5,
+                "id": 9,
+                "question": "Questions9"
+                },
+                {
+                "answer": "answer1",
+                "category": "Science",
+                "difficulty": 3,
+                "id": 1,
+                "question": "Questions1"
+                },
+                {
+                "answer": "answer2",
+                "category": "Science",
+                "difficulty": 3,
+                "id": 2,
+                "question": "Questions2"
+                },
+                {
+                "answer": "answer11",
+                "category": "Science",
+                "difficulty": 3,
+                "id": 11,
+                "question": "Questions11"
+                }
+            ],
+            "success": true,
+            "total_questions": 4
+            }
