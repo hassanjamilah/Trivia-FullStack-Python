@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, abort, jsonify ,request
+from flask import Flask, request, abort, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import random
@@ -111,6 +111,8 @@ def create_app(test_config=None):
               abort(404)
         question.delete()
         return jsonify({"success":True})
+  
+  
   '''
   @TOTO:✅ 
   Create an endpoint to POST a new question, 
@@ -208,10 +210,10 @@ def create_app(test_config=None):
   def get_random_question():
         
         body = request.get_json()
-        category = body.get('quizCategory' , None)
+        category = body.get('quiz_category' )
         prevQuestions = body.get('previous_questions')
         print('🎁🎁🎁🎁🎁{}'.format(len(prevQuestions)))
-        allQuestions = Question.GetRandomQuestion(category , prevQuestions)
+        allQuestions = Question.GetRandomQuestion(category['id'] , prevQuestions)
         return jsonify({
               "success":True , 
               

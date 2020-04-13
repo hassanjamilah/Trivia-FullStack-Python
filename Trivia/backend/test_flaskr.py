@@ -61,7 +61,9 @@ class TriviaTestCase(unittest.TestCase):
         self.assertGreater(data['total_questions'] , 0)
         
     def test_delete_question(self):
-        res = self.client().delete('/questions/1')
+        question = Question('Question2' , 'Answer3' , 'Art' , 3)
+        question.insert()
+        res = self.client().delete('/questions/{}'.format(question.id))
         data = json.loads(res.data)
         
         self.assertEqual(data['success'],True)
@@ -70,7 +72,7 @@ class TriviaTestCase(unittest.TestCase):
     def test_add_new_question(self):
         res = self.client().post('/questions' , json={
                                         "answer": "Answer New1",
-                                        "category": "Art",
+                                        "category": 1,
                                         "difficulty": 5,
                                         "id": 20,
                                         "question": "Question23"
